@@ -9,7 +9,7 @@ const green240 = Color.fromARGB(255, 240, 246, 242);
 const grey = Color.fromARGB(255, 196, 196, 196);
 const grey55 = Color(0xecfcfafa);
 
-const whiteFF = Color.fromARGB(255, 255, 255, 255);
+const white = Color.fromARGB(255, 255, 255, 255);
 const white238 = Color.fromARGB(255, 238, 238, 238);
 const grey128 = Color.fromARGB(255, 128, 128, 128);
 const red212 = Color.fromARGB(255, 212, 60, 60);

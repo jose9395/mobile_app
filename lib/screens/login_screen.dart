@@ -3,6 +3,7 @@ import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
 import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/const/image_path.dart';
+import 'package:stock_check/const/route_name.dart';
 import 'package:stock_check/widget/custom_button.dart';
 import 'package:stock_check/widget/custom_text_field.dart';
 
@@ -23,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: whiteFF,
+        backgroundColor: white,
         body: Padding(
           padding: EdgeInsets.symmetric(
               horizontal: 24 * SizeConfig.widthMultiplier!),
@@ -83,7 +84,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 CustomButton(
                   text: "Login",
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, RouteName.dashboard, (Route<dynamic> route) => false);
+                  },
                 )
               ],
             ),
