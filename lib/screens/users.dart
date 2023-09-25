@@ -18,7 +18,9 @@ class _UserListState extends State<UserList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<UserProvider>(context, listen: false).getAllUser();
+      setState(() {
+        Provider.of<UserProvider>(context, listen: false).getAllUser();
+      });
     });
     super.initState();
   }

@@ -13,7 +13,7 @@ class SqliteDatabaseHelper {
           "CREATE TABLE $_tableName (id TEXT PRIMARY KEY, name TEXT, tradeName TEXT, mobileNo Text, whatsAppNo Text, address Text, gstNumber Text, location Text)",
         );
       },
-      version: 1,
+      version: 2,
     );
   }
 
