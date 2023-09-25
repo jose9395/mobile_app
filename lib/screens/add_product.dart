@@ -26,7 +26,7 @@ class _AddProductState extends State<AddProduct> {
     return SafeArea(
         child: Scaffold(
           appBar: MyCustomAppbar(
-            title: "Add Users",
+            title: "Add Products",
             onPressed: () {
               Navigator.pop(context);
             },
@@ -70,23 +70,14 @@ class _AddProductState extends State<AddProduct> {
                     SizedBox(
                       height: 20 * SizeConfig.heightMultiplier!,
                     ),
-                    CustomTextField(
-                        label: "Mobile No",
-                        isrequired: true,
-                        hint: "Mobile No",
-                        validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                        textEditingController: mobileNoController,
-                        isObsecure: false,
-                        textInputType: TextInputType.number,
-                        onChanged: (value) {}),
+                    //
                     SizedBox(
                       height: 20 * SizeConfig.heightMultiplier!,
                     ),
                     CustomTextField(
-                        label: "Whats App No",
+                        label: "Product name",
                         isrequired: true,
-                        hint: "Whats App No",
+                        hint: "Enter product name",
                         validation: (value) =>
                         value!.isEmpty ? "This field is required" : null,
                         textEditingController: whatsappNoController,
@@ -97,9 +88,9 @@ class _AddProductState extends State<AddProduct> {
                       height: 20 * SizeConfig.heightMultiplier!,
                     ),
                     CustomTextField(
-                        label: "Address",
+                        label: "Description",
                         isrequired: true,
-                        hint: "Address",
+                        hint: "Enter description",
                         validation: (value) =>
                         value!.isEmpty ? "This field is required" : null,
                         textEditingController: addressController,
@@ -110,9 +101,9 @@ class _AddProductState extends State<AddProduct> {
                       height: 20 * SizeConfig.heightMultiplier!,
                     ),
                     CustomTextField(
-                        label: "GST No",
+                        label: "Package size",
                         isrequired: true,
-                        hint: "GST No",
+                        hint: "Enter package size",
                         validation: (value) =>
                         value!.isEmpty ? "This field is required" : null,
                         textEditingController: gstController,
@@ -123,9 +114,22 @@ class _AddProductState extends State<AddProduct> {
                       height: 20 * SizeConfig.heightMultiplier!,
                     ),
                     CustomTextField(
-                        label: "Location",
+                        label: "MRP",
                         isrequired: true,
-                        hint: "Location",
+                        hint: "Enter MRP",
+                        validation: (value) =>
+                        value!.isEmpty ? "This field is required" : null,
+                        textEditingController: locationController,
+                        isObsecure: false,
+                        textInputType: TextInputType.name,
+                        onChanged: (value) {}),
+                    SizedBox(
+                      height: 20 * SizeConfig.heightMultiplier!,
+                    ),
+                    CustomTextField(
+                        label: "Price",
+                        isrequired: true,
+                        hint: "Enter price",
                         validation: (value) =>
                         value!.isEmpty ? "This field is required" : null,
                         textEditingController: locationController,
@@ -136,7 +140,7 @@ class _AddProductState extends State<AddProduct> {
                       height: 30 * SizeConfig.heightMultiplier!,
                     ),
                     CustomButton(
-                      text: "Add User",
+                      text: "Add Product",
                       onPressed: () {
 
                       },
@@ -151,4 +155,5 @@ class _AddProductState extends State<AddProduct> {
           ),
         ));
   }
+
 }

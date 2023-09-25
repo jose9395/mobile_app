@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_check/config/size_config.dart';
+import 'package:stock_check/localdb/user_table.dart';
+import 'package:stock_check/model/user_model.dart';
 import 'package:stock_check/widget/custom_appbar.dart';
 import 'package:stock_check/widget/custom_button.dart';
 import 'package:stock_check/widget/custom_text_field.dart';
@@ -137,7 +139,14 @@ class _AddUsersState extends State<AddUsers> {
                 CustomButton(
                   text: "Add User",
                   onPressed: () {
-
+                    _addItem(User(
+                        name: nameController.value.text,
+                        tradeName: tradeNameController.value.text,
+                        mobileNo: mobileNoController.value.text,
+                        whatsAppNo: whatsappNoController.value.text,
+                        address: addressController.value.text,
+                        gstNumber: gstController.value.text,
+                        location: locationController.value.text));
                   },
                 ),
                 SizedBox(
@@ -149,5 +158,9 @@ class _AddUsersState extends State<AddUsers> {
         ),
       ),
     ));
+  }
+
+  Future<void> _addItem(User user) async {
+    await SqliteDatabaseHelper().insertUser(user);
   }
 }
