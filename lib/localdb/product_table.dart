@@ -7,13 +7,13 @@ class ProductTable {
 
   Future<Database> getDataBase() async {
     return openDatabase(
-      join(await getDatabasesPath(), "usersDatabase.db"),
+      join(await getDatabasesPath(), "productDatabase.db"),
       onCreate: (db, version) async {
         await db.execute(
           "CREATE TABLE $_tableName (id TEXT PRIMARY KEY, category TEXT, code TEXT, brandImage Text, productName Text, description Text, size Text, mrp Text, price Text)",
         );
       },
-      version: 1,
+      version: 2,
     );
   }
 

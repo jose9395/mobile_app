@@ -32,12 +32,12 @@ class _AddProductState extends State<AddProduct> {
   @override
   void initState() {
    if(widget.prodId.isNotEmpty){
-     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+ /*    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
        Provider.of<ProductProvider>(context, listen: false).getProduct(widget.prodId);
        Provider.of<ProductProvider>(context, listen: false).product?.then((value) {
          priceController.text = value.price.toString();
        });
-     });
+     });*/
    }
     super.initState();
   }

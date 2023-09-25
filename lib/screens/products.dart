@@ -17,7 +17,10 @@ class _ProductsListState extends State<ProductsList> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Provider.of<ProductProvider>(context, listen: false).getAllProduct();
+      setState(() {
+        Provider.of<ProductProvider>(context, listen: false).getAllProduct();
+      });
+
     });
     super.initState();
   }
