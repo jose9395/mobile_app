@@ -44,7 +44,9 @@ class _UserListState extends State<UserList> {
                itemBuilder: (context, index){
                  return UserListItem(
                   name: user[index].name,
-                  mobileno: user[index].mobileNo,
+                  mobileNo: user[index].mobileNo,
+                   address: user[index].address,
+                   userId: user[index].id,
                  );
                });
           }

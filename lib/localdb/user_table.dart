@@ -69,4 +69,5 @@ class SqliteDatabaseHelper {
     Database db = await getDataBase();
     await db.rawDelete("DELETE FROM $_tableName WHERE id = '$userId'");
   }
+
 }
