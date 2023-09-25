@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stock_check/config/size_config.dart';
+import 'package:stock_check/const/route_name.dart';
 import 'package:stock_check/localdb/user_table.dart';
 import 'package:stock_check/model/user_model.dart';
 import 'package:stock_check/widget/custom_appbar.dart';
@@ -28,7 +29,7 @@ class _AddUsersState extends State<AddUsers> {
     return SafeArea(
         child: Scaffold(
       appBar: MyCustomAppbar(
-        title: "Add Users",
+        title: "Add Customer",
         onPressed: () {
           Navigator.pop(context);
         },
@@ -139,7 +140,7 @@ class _AddUsersState extends State<AddUsers> {
                 CustomButton(
                   text: "Add User",
                   onPressed: () {
-                    _addItem(User(
+                    addUser(User(
                         name: nameController.value.text,
                         tradeName: tradeNameController.value.text,
                         mobileNo: mobileNoController.value.text,
@@ -160,7 +161,9 @@ class _AddUsersState extends State<AddUsers> {
     ));
   }
 
-  Future<void> _addItem(User user) async {
+  Future<void> addUser(User user) async {
     await SqliteDatabaseHelper().insertUser(user);
+    Navigator.of(context).pushNamed(RouteName.dashboard);
   }
+
 }

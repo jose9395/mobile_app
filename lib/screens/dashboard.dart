@@ -27,7 +27,7 @@ class _DashboardState extends State<Dashboard> {
             title: Text("TradePro",style: AppTextStyle.content_white),
             bottom: const TabBar(
               tabs: [
-                Tab(icon: Icon(Icons.supervised_user_circle), text: "Users"),
+                Tab(icon: Icon(Icons.supervised_user_circle), text: "Customers"),
                 Tab(icon: Icon(Icons.shopping_cart_outlined), text: "Products")
               ],
             ),

@@ -13,7 +13,6 @@ class ImagePickerWidget extends StatelessWidget {
   final String title;
   final Color? color;
   final bool isRequired;
-  final bool isLoading;
 
   const ImagePickerWidget({
     Key? key,
@@ -21,7 +20,6 @@ class ImagePickerWidget extends StatelessWidget {
     required this.currentImage,
     required this.onClear,
     required this.title,
-    required this.isLoading,
     this.color,
     this.isRequired = false,
   }) : super(key: key);
@@ -115,14 +113,7 @@ class ImagePickerWidget extends StatelessWidget {
                 children: [
                   currentImage.isEmpty
                       ? Icon(Icons.upload_outlined)
-                      : isLoading
-                          ? SizedBox(
-                              height: 20 * SizeConfig.heightMultiplier!,
-                              width: 20 * SizeConfig.widthMultiplier!,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3 * SizeConfig.widthMultiplier!,
-                              ))
-                          : const Icon(
+                      : const Icon(
                               Icons.image,
                               color: blue77,
                             ),

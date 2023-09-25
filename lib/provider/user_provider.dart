@@ -1,6 +1,3 @@
-
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:stock_check/localdb/user_table.dart';
 import 'package:stock_check/model/user_model.dart';
@@ -20,6 +17,12 @@ class UserProvider extends ChangeNotifier {
     _user = response;
     isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> deleteUser(String userId) async{
+    SqliteDatabaseHelper().deleteUser(userId);
+
+    getAllUser();
   }
 
 
