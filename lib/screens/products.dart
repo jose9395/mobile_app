@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
+import 'package:stock_check/const/route_name.dart';
 import 'package:stock_check/screens/list_items/user-list-item.dart';
 
 
@@ -22,7 +23,7 @@ class _ProductsListState extends State<ProductsList> {
           shrinkWrap: true,
           itemCount: 4,
           itemBuilder: (context, index) {
-            const UserList();
+
           },
         ),
       ),
@@ -30,7 +31,7 @@ class _ProductsListState extends State<ProductsList> {
         elevation: 0,
         backgroundColor: green33,
         onPressed: (){
-
+          Navigator.of(context).pushNamed(RouteName.addproduct);
         },
         child: Icon(
           Icons.add,

@@ -7,5 +7,6 @@ abstract class RouteName{
   static const  login_route = '/login';
   static const dashboard = '/dashboard';
   static const adduser = '/adduser';
+  static const addproduct = '/product';
 }
 
