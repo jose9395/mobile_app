@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stock_check/config/size_config.dart';
-import 'package:stock_check/const/route_name.dart';
-import 'package:stock_check/localdb/product_table.dart';
-import 'package:stock_check/model/product_model.dart';
+import 'package:provider/provider.dart';
+import 'package:stock_check/const/app_color.dart';
+import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/provider/product_provider.dart';
-import 'package:stock_check/utils/image_picker.dart';
-import 'package:stock_check/widget/custom_appbar.dart';
+import 'package:stock_check/widget/container_widget.dart';
 import 'package:stock_check/widget/custom_button.dart';
 import 'package:stock_check/widget/custom_text_field.dart';
-import 'package:provider/provider.dart';
+import 'package:stock_check/widget/snack_bar.dart';
 
 class AddProduct extends StatefulWidget {
   const AddProduct({super.key,this.prodId = ""});
@@ -19,192 +17,181 @@ class AddProduct extends StatefulWidget {
 }
 
 class _AddProductState extends State<AddProduct> {
-  final GlobalKey<FormState> createFormKey = GlobalKey<FormState>();
-  final TextEditingController categoryController = TextEditingController();
-  final TextEditingController codeController = TextEditingController();
-  final TextEditingController prodNameController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController sizeController = TextEditingController();
-  final TextEditingController mrpController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
-  String prodImage = "";
+  final _key = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _priceController = TextEditingController();
 
   @override
-  void initState() {
-   if(widget.prodId.isNotEmpty){
- /*    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-       Provider.of<ProductProvider>(context, listen: false).getProduct(widget.prodId);
-       Provider.of<ProductProvider>(context, listen: false).product?.then((value) {
-         priceController.text = value.price.toString();
-       });
-     });*/
-   }
-    super.initState();
+  void dispose() {
+    _nameController.dispose();
+    _priceController.dispose();
+
+    super.dispose();
+  }
+
+  Future<bool> _onWillPop() async {
+    final productProvider =
+    Provider.of<ProductProvider>(context, listen: false);
+
+    productProvider.deleteImage();
+    return navigatorPopWidget(context);
+  }
+
+  navigatorPopWidget(BuildContext context) {
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      appBar: MyCustomAppbar(
-        title: "Add Products",
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Container(
-          padding: EdgeInsets.symmetric(
-              vertical: 20 * SizeConfig.heightMultiplier!,
-              horizontal: 24 * SizeConfig.widthMultiplier!),
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    final productProvider =
+    Provider.of<ProductProvider>(context, listen: false);
+    //
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+          title: Text(
+            'Add product',
+            style: AppTextStyle.sub_title_white,
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              productProvider.deleteImage();
+              navigatorPopWidget(context);
+            },
+          ),
+        ),
+        body: SingleChildScrollView(
           child: Form(
-            key: createFormKey,
+            key: _key,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomTextField(
-                    label: "Category",
-                    isrequired: true,
-                    hint: "Enter Category",
-                    validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: categoryController,
-                    isObsecure: false,
-                    textInputType: TextInputType.name,
-                    onChanged: (value) {}),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                CustomTextField(
-                    label: "Code",
-                    isrequired: true,
-                    hint: "Enter code",
-                    validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: codeController,
-                    isObsecure: false,
-                    textInputType: TextInputType.name,
-                    onChanged: (value) {}),
+                SizedBox(height: height * 0.02),
+                Consumer<ProductProvider>(
+                    builder: (context, value, child) {
+                      return value.showImage == null
+                          ? ContainerWidget(
+                        widget: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Pick Image',
+                              style: AppTextStyle.content,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(width * 0.02),
+                              child: Icon(
+                                Icons.image,
+                                size: width * 0.07,
+                              ),
+                            ),
+                          ],
+                        ),
+                        callback: () {
+                          productProvider.pickImage();
+                        },
+                      )
+                          : ContainerWidget(
+                        widget: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(width * 0.03),
+                              child: FadeInImage(
+                                placeholder:
+                                const AssetImage('loading.gif'),
+                                image: FileImage(value.showImage!),
+                                width: width,
+                                height: height,
+                                fit: BoxFit.cover,
+                                alignment: Alignment.center,
+                                placeholderFit: BoxFit.contain,
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.delete_forever,
+                                color: red33,
+                              ),
+                              onPressed: () {
+                                value.deleteImage();
+                              },
+                            ),
+                          ],
+                        ),
+                        callback: () {
+                          value.pickImage();
+                        },
+                      );
+                    },
+                  ),
 
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                //
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
+                //product name
                 CustomTextField(
-                    label: "Product name",
+                    label: "Product Name",
                     isrequired: true,
-                    hint: "Enter product name",
+                    hint: "Product Name",
                     validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: prodNameController,
-                    isObsecure: false,
-                    textInputType: TextInputType.number,
-                    onChanged: (value) {}),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                ImagePickerWidget(
-                  onClear: () {
-                    prodImage = "";
-                  },
-                  title: "Upload Product image",
-                  currentImage: prodImage,
-                  onSelectedImage: (String imagePath) async {
-                    prodImage = imagePath;
-                  },
-                ),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                CustomTextField(
-                    label: "Description",
-                    isrequired: true,
-                    hint: "Enter description",
-                    validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: descriptionController,
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _priceController,
                     isObsecure: false,
                     textInputType: TextInputType.name,
                     onChanged: (value) {}),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
+                //product price
                 CustomTextField(
-                    label: "Package size",
+                    label: "Product price",
                     isrequired: true,
-                    hint: "Enter package size",
+                    hint: "Product price",
                     validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: sizeController,
-                    isObsecure: false,
-                    textInputType: TextInputType.name,
-                    onChanged: (value) {}),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                CustomTextField(
-                    label: "MRP",
-                    isrequired: true,
-                    hint: "Enter MRP",
-                    validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: mrpController,
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _priceController,
                     isObsecure: false,
                     textInputType: TextInputType.number,
                     onChanged: (value) {}),
-                SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                CustomTextField(
-                    label: "Price",
-                    isrequired: true,
-                    hint: "Enter price",
-                    validation: (value) =>
-                        value!.isEmpty ? "This field is required" : null,
-                    textEditingController: priceController,
-                    isObsecure: false,
-                    textInputType: TextInputType.number,
-                    onChanged: (value) {}),
-                SizedBox(
-                  height: 30 * SizeConfig.heightMultiplier!,
-                ),
                 CustomButton(
                   text: "Add Product",
-                  onPressed: () {
-                    addProduct(Product(
-                        category: categoryController.value.text,
-                        code: codeController.value.text,
-                        brandImage: prodImage,
-                        productName: prodNameController.value.text,
-                        description: descriptionController.value.text,
-                        packageSize: sizeController.value.text,
-                        mrp: mrpController.value.text,
-                        price: priceController.value.text));
+                  onPressed: () async{
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    if (!_key.currentState!.validate()) {
+
+                    } else {
+                      if (productProvider.fileSize != null &&
+                          double.parse(productProvider.fileSize.toString()) >=
+                              double.parse('10.00')) {
+
+                      } else {
+                        if (productProvider.image != null &&
+                            productProvider.fileType != 'png' &&
+                            productProvider.fileType != 'jpg' &&
+                            productProvider.fileType != 'jpeg') {
+
+                        } else {
+                          await productProvider.insertDatabase(
+                            _nameController.text,
+                            _priceController.text.replaceAll(',', ''),
+                            productProvider.showImage == null
+                                ? '0'
+                                : productProvider.showImage!.path,
+                          );
+                          _priceController.clear();
+                          _nameController.clear();
+                          productProvider.deleteImage();
+                          snackBarSuccessWidget(context, 'Product added');
+                          navigatorPopWidget(context);
+                        }
+                      }
+                    }
                   },
-                ),
-                SizedBox(
-                  height: 10 * SizeConfig.heightMultiplier!,
                 ),
               ],
             ),
           ),
         ),
       ),
-    ));
-  }
-
-  Future<void> addProduct(Product product) async {
-    await ProductTable().insertProduct(product);
-    Navigator.of(context).pushNamed(RouteName.dashboard);
-  }
-
-  Future<void> editProduct() async {
-
+    );
   }
 
 }

@@ -4,25 +4,25 @@ import 'package:stock_check/model/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
   final _db =  SqliteDatabaseHelper().getAllUsers();
-  bool isLoading = false;
   List<User>  _user = [];
   List<User> get allUsers => _user;
 
 
   Future<void> getAllUser() async {
-    isLoading = true;
-    notifyListeners();
-
-    final response = await _db;
-    _user = response;
-    isLoading = false;
-    notifyListeners();
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      final response = await _db;
+      _user = response;
+      notifyListeners();
+    } catch (error) {
+      throw Exception('Failed to fetch items: $error'); // Throw an exception in case of an error
+    }
   }
 
   Future<void> deleteUser(String userId) async{
     SqliteDatabaseHelper().deleteUser(userId);
-
     getAllUser();
+    notifyListeners();
   }
 
 
