@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
@@ -5,12 +6,20 @@ import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/const/route_name.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_check/provider/product_provider.dart';
+import 'package:stock_check/screens/edit_product_screen.dart';
+import 'package:stock_check/widget/delete_dismiss.dart';
+import 'package:stock_check/widget/edit_dismiss.dart';
+import 'package:stock_check/widget/image_screen.dart';
+import 'package:stock_check/widget/small_button.dart';
+import 'package:stock_check/widget/snack_bar.dart';
 
 class ProductsList extends StatelessWidget {
   const ProductsList({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         elevation: 0,
@@ -46,10 +55,6 @@ class ProductsList extends StatelessWidget {
                         itemCount: productProvider.item.length,
                         itemBuilder: (context, index) => Dismissible(
                           key: ValueKey(productProvider.item[index].id),
-                          child: MainBody(
-                            productProvider: productProvider,
-                            index: index,
-                          ),
                           background: const DeleteDismiss(verticalMargin: 0.03),
                           secondaryBackground:
                               const EditDismiss(verticalMargin: 0.03),
@@ -57,8 +62,13 @@ class ProductsList extends StatelessWidget {
                             if (direction == DismissDirection.startToEnd) {
                               //delete
                               return showModalBottomSheet(
-                                shape: bottomSheetborderWidget(context),
-                                backgroundColor: backGroundColor,
+                                shape:  RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(width * 0.02),
+                                    topRight: Radius.circular(width * 0.02),
+                                  ),
+                                ),
+                                backgroundColor: green5e,
                                 context: context,
                                 builder: (context) => DeleteProductBottomSheet(
                                   index: index,
@@ -68,18 +78,20 @@ class ProductsList extends StatelessWidget {
                             } else {
                               //edit product
                               var helperVar = productProvider.item[index];
-                              navigatorPushWidget(
-                                context,
-                                EditProductScreen(
-                                  id: helperVar.id,
-                                  productName: helperVar.productName,
-                                  productPrice: helperVar.productPrice,
-                                  productImage: helperVar.productImage,
-                                  index: index,
-                                ),
-                              );
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (context) =>     EditProductScreen(
+                                    id: helperVar.id,
+                                    productName: helperVar.productName,
+                                    productPrice: helperVar.productPrice,
+                                    productImage: helperVar.productImage,
+                                    index: index,
+                                  ),),);
                             }
                           },
+                          child: MainBody(
+                            productProvider: productProvider,
+                            index: index,
+                          ),
                         ),
                       ),
               ),
@@ -113,28 +125,28 @@ class DeleteProductBottomSheet extends StatelessWidget {
           Text(
             'Do you want to delete the ${helper.productName}?',
             maxLines: 2,
-            style: Responsive.isMobile(context)
-                ? bodyBoldBlackMobileStyle
-                : bodyBoldBlackTabletStyle,
+            style: AppTextStyle.content,
           ),
           Row(
             children: [
               Expanded(
                 child: SmallRedElevationButton(
                   text: 'Delete it',
+                  color: green67,
                   onPress: () async {
                     productProvider.deleteProductById(helper.id);
                     productProvider.item.removeAt(index);
                     snackBarSuccessWidget(context, 'Product removed');
-                    navigatorPopWidget(context);
+                    Navigator.pop(context);
                   },
                 ),
               ),
               Expanded(
-                child: SmallWhiteElevationButton(
+                child: SmallRedElevationButton(
                   text: 'Return',
-                  onPress: () {
-                    navigatorPopWidget(context);
+                  color: white238,
+                  onPress: () async {
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -162,10 +174,12 @@ class MainBody extends StatelessWidget {
     var helper = productProvider.item[index];
     return Card(
       elevation: 3,
-      shape: shapeWidget(context),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(width * 0.03),
+      ),
       margin: EdgeInsets.symmetric(
           horizontal: width * 0.02, vertical: height * 0.01),
-      shadowColor: shadowColor,
+      shadowColor: Colors.white,
       color: Colors.white,
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -178,13 +192,37 @@ class MainBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  getBodyBoldText(
-                    context,
-                    'product name: ',
-                    helper.productName,
+                  RichText(
+                    maxLines: 3,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'product name: ',
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text: helper.productName,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: height * 0.02),
-                  getPriceText(context, 'Price: ', helper.productPrice),
+                  RichText(
+                    // maxLines: 2,
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "price",
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text:helper.productPrice,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -193,15 +231,20 @@ class MainBody extends StatelessWidget {
               children: [
                 helper.productImage.toString() != '0'
                     ? ClipRRect(
-                        borderRadius: borderWidget(context),
+                        borderRadius:  BorderRadius.circular(width * 0.03),
                         child: GestureDetector(
                           onTap: () {
-                            navigatorPushWidget(
-                              context,
-                              ImageScreen(
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) =>  ImageScreen(
                                 image: File(helper.productImage),
                                 heroTag: 'flutterLogo$index',
-                              ),
+                              ),),
+                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => ImageScreen(
+                                image: File(helper.productImage),
+                                heroTag: 'flutterLogo$index',
+                              ),),
                             );
                           },
                           child: Hero(
