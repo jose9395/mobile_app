@@ -7,6 +7,7 @@ import 'package:stock_check/const/route_name.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:stock_check/screens/edit_product_screen.dart';
+import 'package:stock_check/screens/pdf_preview.dart';
 import 'package:stock_check/widget/delete_dismiss.dart';
 import 'package:stock_check/widget/edit_dismiss.dart';
 import 'package:stock_check/widget/image_screen.dart';
@@ -21,17 +22,39 @@ class ProductsList extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        backgroundColor: green33,
-        onPressed: () {
-          Navigator.of(context).pushNamed(RouteName.addproduct);
-        },
-        child: Icon(
-          Icons.add,
-          color: white,
-          size: 30 * SizeConfig.widthMultiplier!,
-        ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "pdf",
+            elevation: 0,
+            backgroundColor: green33,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>  CustomPDFViewScreen()));
+            },
+            child: Icon(
+              Icons.picture_as_pdf,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+          SizedBox(width: width * 0.02,),
+          FloatingActionButton(
+            heroTag: "add",
+            elevation: 0,
+            backgroundColor: green33,
+            onPressed: () {
+              Navigator.of(context).pushNamed(RouteName.addproduct);
+            },
+            child: Icon(
+              Icons.add,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: Provider.of<ProductProvider>(context, listen: false)
