@@ -205,7 +205,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'product name: ',
+                          text: 'product name : ',
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
@@ -220,7 +220,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "price",
+                          text: "price : ",
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
@@ -235,7 +235,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Product Code",
+                          text: "Product Code : ",
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
@@ -250,7 +250,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Product Size",
+                          text: "Product Size : ",
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
@@ -265,7 +265,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Product Category",
+                          text: "Product Category : ",
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
@@ -280,7 +280,7 @@ class MainBody extends StatelessWidget {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: "Description",
+                          text: "Description : ",
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
