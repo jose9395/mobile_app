@@ -1,34 +1,149 @@
 import 'package:flutter/cupertino.dart';
 import 'package:stock_check/localdb/product_table.dart';
-import 'package:stock_check/model/product_model.dart';
+import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'dart:typed_data';
+
+class ProductModel {
+  final String id;
+  String productName;
+  String productPrice;
+  String productImage;
+
+  ProductModel({
+    required this.id,
+    required this.productName,
+    required this.productPrice,
+    required this.productImage,
+  });
+}
 
 class ProductProvider extends ChangeNotifier {
+  List<ProductModel> _item = [];
 
-  final _db =  ProductTable().getAllProducts();
-  bool isLoading = false;
-  List<Product>  _product = [];
-  List<Product> get allProduct => _product;
+  List<ProductModel> get item => _item;
 
- Future<Product>? product;
+  Uint8List? bytes;
 
-  Future<void> getAllProduct() async {
-    isLoading = true;
-    notifyListeners();
+  String? fileType;
+  ImagePicker? picker;
+  String? fileSize;
+  XFile? image;
+  File? showImage;
+  int? size;
 
-    final response = await _db;
-    _product = response;
-    isLoading = false;
+  Future pickImage() async {
+    picker = ImagePicker();
+    image = await picker!.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 25,
+      // maxHeight: ,
+      // maxWidth: ,
+    );
+    showImage = File(image!.path);
+    bytes = showImage!.readAsBytesSync();
+    size = showImage!.readAsBytesSync().lengthInBytes;
+    final kb = size! / 1024;
+    final mb = kb / 1024;
+    fileSize = mb.toString().substring(0, 4);
+    fileType = image!.name.toString().split('.').last;
+    print('image!.path=${image!.path}');
+    print('fileName=$fileType');
+    print('image!.mb=$mb');
+    print('image!.kb=$kb');
     notifyListeners();
   }
 
-  Future<void> getProduct(String prodId) async {
-    isLoading = true;
-    notifyListeners();
-
-    product = ProductTable().getProduct(prodId);
-    isLoading = false;
+  Future deleteImage() async {
+    image = null;
+    showImage = null;
     notifyListeners();
   }
 
+  //database
+  Future insertDatabase(
+      String productName,
+      String productPrice,
+      String productImage,
+      ) async {
+    final newProduct = ProductModel(
+      id: const Uuid().v1(),
+      productName: productName,
+      productPrice: productPrice,
+      productImage: productImage,
+    );
+    _item.add(newProduct);
+
+    await  DBHelper.insert(DBHelper.product, {
+      'id': newProduct.id,
+      'productName': newProduct.productName,
+      'productPrice': newProduct.productPrice,
+      'productImage': newProduct.productImage,
+    });
+
+    deleteImage();
+    notifyListeners();
+  }
+
+// show items
+  Future<void> selectProducts() async {
+    final dataList = await DBHelper.selectProduct();
+    _item = dataList
+        .map((item) => ProductModel(
+      id: item['id'],
+      productName: item['productName'],
+      productPrice: item['productPrice'],
+      productImage: item['productImage'],
+    ))
+        .toList();
+    notifyListeners();
+  }
+
+  Future<void> deleteProductById(pickId) async {
+    await DBHelper.deleteById(DBHelper.product, 'id', pickId);
+    print('delete_product');
+    notifyListeners();
+  }
+
+  Future deleteTable() async {
+    await DBHelper.deleteTable(DBHelper.product);
+    print('table delete');
+    notifyListeners();
+  }
+
+  Future<void> updateProductNameById(id, String productName) async {
+    final db = await DBHelper.database();
+    await db.update(
+      DBHelper.product,
+      {'productName': productName},
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    notifyListeners();
+  }
+
+  Future<void> updatePriceById(id, String productPrice) async {
+    final db = await DBHelper.database();
+    await db.update(
+      DBHelper.product,
+      {'productPrice': productPrice},
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    notifyListeners();
+  }
+
+  Future<void> updateProductImageById(id, productImage) async {
+    final db = await DBHelper.database();
+    await db.update(
+      DBHelper.product,
+      {'productImage': productImage},
+      where: "id = ?",
+      whereArgs: [id],
+    );
+    notifyListeners();
+  }
 
 }

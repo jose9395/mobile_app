@@ -1,63 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
+import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/const/route_name.dart';
 import 'package:stock_check/provider/user_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:stock_check/screens/list_items/user-list-item.dart';
 
-class UserList extends StatefulWidget {
+class UserList extends StatelessWidget {
   const UserList({super.key});
-
-  @override
-  State<UserList> createState() => _UserListState();
-}
-
-class _UserListState extends State<UserList> {
-
-  @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {
-        Provider.of<UserProvider>(context, listen: false).getAllUser();
-      });
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Consumer<UserProvider>(
-        builder: (context, value, child) {
-          if(value.isLoading){
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          else if(value.allUsers.isEmpty){
-            return const Center(
-              child: Text("No Users Available"),
-            );
-          } else {
-           final user =  value.allUsers;
-           return ListView.builder(
-               itemCount: user.length,
-               itemBuilder: (context, index){
-                 return UserListItem(
-                  name: user[index].name,
-                  mobileNo: user[index].mobileNo,
-                   address: user[index].address,
-                   userId: user[index].id,
-                 );
-               });
-          }
-        }
+      body: FutureBuilder(
+        future: Provider.of<UserProvider>(context, listen: false).getAllUser(),
+        builder: (context, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(child: CircularProgressIndicator())
+                : Consumer<UserProvider>(
+                    child: Center(
+                      child: Text(
+                        'No products added',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.content,
+                      ),
+                    ),
+                    builder: (context, userProvider, child) =>
+                        userProvider.allUsers.isEmpty
+                            ? child!
+                            : ListView.builder(
+                                itemCount: userProvider.allUsers.length,
+                                itemBuilder: (context, index) {
+                                  final user = userProvider.allUsers[index];
+                                  return UserListItem(
+                                    name: user.name,
+                                    mobileNo: user.mobileNo,
+                                    address: user.address,
+                                  );
+                                },
+                              ),
+                  ),
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         backgroundColor: green33,
-        onPressed: (){
+        onPressed: () {
           Navigator.of(context).pushNamed(RouteName.adduser);
         },
         child: Icon(
