@@ -45,9 +45,7 @@ class _AddProductState extends State<AddProduct> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
-    final productProvider =
-    Provider.of<ProductProvider>(context, listen: false);
-    //
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -136,7 +134,7 @@ class _AddProductState extends State<AddProduct> {
                     hint: "Product Name",
                     validation: (value) =>
                     value!.isEmpty ? "This field is required" : null,
-                    textEditingController: _priceController,
+                    textEditingController: _nameController,
                     isObsecure: false,
                     textInputType: TextInputType.name,
                     onChanged: (value) {}),
@@ -156,7 +154,7 @@ class _AddProductState extends State<AddProduct> {
                   onPressed: () async{
                     FocusScope.of(context).requestFocus(FocusNode());
                     if (!_key.currentState!.validate()) {
-
+                      snackBarErrorWidget(context,"All field is mandatory");
                     } else {
                       if (productProvider.fileSize != null &&
                           double.parse(productProvider.fileSize.toString()) >=
