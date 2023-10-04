@@ -256,6 +256,7 @@ class _AddProductState extends State<AddProduct> {
                             productProvider.fileType != 'jpeg') {
 
                         } else {
+                          Navigator.of(context).pop();
                           await productProvider.insertDatabase(
                             _nameController.text,
                             _priceController.text.replaceAll(',', ''),
@@ -277,7 +278,6 @@ class _AddProductState extends State<AddProduct> {
                           _sizeController.clear();
                           productProvider.deleteImage();
                           snackBarSuccessWidget(context, 'Product added');
-                          navigatorPopWidget(context);
                         }
                       }
                     }

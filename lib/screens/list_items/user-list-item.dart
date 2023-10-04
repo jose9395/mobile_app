@@ -43,7 +43,7 @@ class UserListItem extends StatelessWidget {
                     style: AppTextStyle.content,
                   ),
                   Text(
-                    "Mobile number : $num",
+                    "Trade Name : $tradeName",
                     style: AppTextStyle.content,
                   ),
                   Text(
