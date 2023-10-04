@@ -6,7 +6,6 @@ class User {
   final String? whatsAppNo;
   final String? address;
   final String? gstNumber;
-  final String? location;
 
   const User(
       {this.id,
@@ -15,8 +14,7 @@ class User {
       this.mobileNo,
       this.whatsAppNo,
       this.address,
-      this.gstNumber,
-      this.location});
+      this.gstNumber});
 
   factory User.fromMap(Map<String, dynamic> json) => User(
       id: json["id"],
@@ -25,8 +23,7 @@ class User {
       mobileNo: json["mobileNo"],
       whatsAppNo: json["whatsAppNo"],
       address: json["address"],
-      gstNumber: json["gstNumber"],
-      location: json["location"]);
+      gstNumber: json["gstNumber"]);
 
   Map<String, dynamic> toMap() {
     return {
@@ -36,8 +33,7 @@ class User {
       'mobileNo': mobileNo,
       'whatsAppNo': whatsAppNo,
       'address': address,
-      'gstNumber': gstNumber,
-      'location': location
+      'gstNumber': gstNumber
     };
   }
 

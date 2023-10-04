@@ -122,19 +122,6 @@ class _AddUsersState extends State<AddUsers> {
                     textInputType: TextInputType.name,
                     onChanged: (value) {}),
                 SizedBox(
-                  height: 20 * SizeConfig.heightMultiplier!,
-                ),
-                CustomTextField(
-                    label: "Location",
-                    isrequired: true,
-                    hint: "Enter Location",
-                    validation: (value) =>
-                    value!.isEmpty ? "This field is required" : null,
-                    textEditingController: locationController,
-                    isObsecure: false,
-                    textInputType: TextInputType.name,
-                    onChanged: (value) {}),
-                SizedBox(
                   height: 30 * SizeConfig.heightMultiplier!,
                 ),
                 CustomButton(
@@ -146,8 +133,7 @@ class _AddUsersState extends State<AddUsers> {
                         mobileNo: mobileNoController.value.text,
                         whatsAppNo: whatsappNoController.value.text,
                         address: addressController.value.text,
-                        gstNumber: gstController.value.text,
-                        location: locationController.value.text));
+                        gstNumber: gstController.value.text));
                   },
                 ),
                 SizedBox(

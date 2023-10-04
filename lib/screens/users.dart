@@ -37,6 +37,9 @@ class UserList extends StatelessWidget {
                                     name: user.name,
                                     mobileNo: user.mobileNo,
                                     address: user.address,
+                                    whatsappno: user.whatsAppNo,
+                                    gstno: user.gstNumber,
+                                    tradeName: user.tradeName,
                                   );
                                 },
                               ),
