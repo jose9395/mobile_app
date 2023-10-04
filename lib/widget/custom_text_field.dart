@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
       required this.textInputType,
       this.validation,
       this.enabled = true,
+      this.length = 1000,
       Key? key})
       : super(key: key);
 
@@ -38,6 +39,7 @@ class CustomTextField extends StatelessWidget {
   String? hint;
   Widget? suffixWidget;
   List<TextInputFormatter>? formatters;
+  int length;
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +84,7 @@ class CustomTextField extends StatelessWidget {
             onSuffixTap: onSuffixTap,
             errorText: errorText,
             isObsecure: isObsecure,
+            maxLength: length,
             suffixWidget: suffixWidget)
       ],
     );

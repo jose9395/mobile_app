@@ -2,13 +2,14 @@ import 'dart:io';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
 import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:stock_check/widget/container_widget.dart';
 import 'package:stock_check/widget/custom_button.dart';
+import 'package:stock_check/widget/custom_text_field.dart';
 import 'package:stock_check/widget/snack_bar.dart';
-import 'package:stock_check/widget/textform_fieldname.dart';
 
 
 class EditProductScreen extends StatefulWidget {
@@ -19,11 +20,21 @@ class EditProductScreen extends StatefulWidget {
     required this.productPrice,
     required this.productImage,
     required this.index,
+    required this.code,
+    required this.category,
+    required this.description,
+    required this.mrp,
+    required this.size
   }) : super(key: key);
   final String id;
   final String productName;
   final String productPrice;
   final String productImage;
+  final String description;
+  final String mrp;
+  final String code;
+  final String size;
+  final String category;
   final int index;
 
   @override
@@ -34,12 +45,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _key = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
+  final TextEditingController _categoryController = TextEditingController();
+  final TextEditingController _sizeController = TextEditingController();
+  final TextEditingController _mrpController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
     _nameController.text = widget.productName;
     _priceController.text = widget.productPrice;
-
+    _codeController.text = widget.code;
+    _categoryController.text = widget.category;
+    _sizeController.text = widget.size;
+    _mrpController.text = widget.mrp;
+    _descriptionController.text = widget.description;
     super.initState();
   }
 
@@ -47,6 +67,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   void dispose() {
     _nameController.dispose();
     _priceController.dispose();
+    _codeController.dispose();
+    _categoryController.dispose();
+    _sizeController.dispose();
+    _mrpController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -72,9 +97,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
+        backgroundColor: green33,
         title: Text(
           'Edit Product',
-          style: AppTextStyle.content,
+          style: AppTextStyle.sub_title_white,
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
@@ -86,12 +112,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       body: WillPopScope(
         onWillPop: _onWillPop,
         child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal:10 * SizeConfig.widthMultiplier!),
           child: Form(
             key: _key,
             child: Column(
               children: [
                 SizedBox(height: height * 0.02),
-
                 FadeInLeft(
                   child: Consumer<ProductProvider>(
                     builder: (context, productP, child) => ContainerWidget(
@@ -172,46 +198,104 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     ),
                   ),
                 ),
-
-                //name
-                FadeInLeft(
-                  child: TextFormFieldNameWidget(
-                    textEditingController: _nameController,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.name,
-                    maxLength: 500,
-                    minLine: 1,
-                    maxLine: 1,
-                    labelText: 'Product name',
-                    iconData: Icons.edit_outlined,
-                    validator: (value) {
-                      if (value!.trim().isEmpty) {
-                        return 'Product name is empty';
-                      }
-                      return null;
-                    },
-                  ),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
                 ),
-                //product price
-                FadeInLeft(
-                  child: TextFormFieldNameWidget(
+                //name
+                CustomTextField(
+                      label: "Product Name",
+                      isrequired: true,
+                      hint: "Enter Product Name",
+                      validation: (value) =>
+                      value!.isEmpty ? "This field is required" : null,
+                      textEditingController: _nameController,
+                      isObsecure: false,
+                      textInputType: TextInputType.name,
+                      onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product Price",
+                    isrequired: true,
+                    hint: "Enter Product Price",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
                     textEditingController: _priceController,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                    textInputAction: TextInputAction.done,
-                    keyboardType: TextInputType.number,
-                    maxLength: 50,
-                    minLine: 1,
-                    maxLine: 1,
-                    labelText: 'Product price',
-                    iconData: Icons.money_rounded,
-                    validator: (value) {
-                      if (value!.trim().isEmpty) {
-                        return 'Product price is empty';
-                      }
-                      return null;
-                    },
-                  ),
+                    isObsecure: false,
+                    length: 4,
+                    textInputType: TextInputType.number,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product Code",
+                    isrequired: true,
+                    hint: "Enter Product Code",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _codeController,
+                    isObsecure: false,
+                    length: 8,
+                    textInputType: TextInputType.number,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product Category",
+                    isrequired: true,
+                    hint: "Enter Product Category",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _categoryController,
+                    isObsecure: false,
+                    textInputType: TextInputType.text,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product Size",
+                    isrequired: true,
+                    hint: "Enter Product Size",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _sizeController,
+                    isObsecure: false,
+                    length: 8,
+                    textInputType: TextInputType.number,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product Description",
+                    isrequired: true,
+                    hint: "Enter Product Description",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _descriptionController,
+                    isObsecure: false,
+                    textInputType: TextInputType.text,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
+                ),
+                CustomTextField(
+                    label: "Product MRP",
+                    isrequired: true,
+                    hint: "Enter Product MRP",
+                    validation: (value) =>
+                    value!.isEmpty ? "This field is required" : null,
+                    textEditingController: _mrpController,
+                    isObsecure: false,
+                    textInputType: TextInputType.number,
+                    length: 4,
+                    onChanged: (value) {}),
+                SizedBox(
+                  height: 10 * SizeConfig.heightMultiplier!,
                 ),
                 CustomButton(
                   text: "Edit Product",
@@ -248,7 +332,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                             item.productPrice =
                                 _priceController.text.replaceAll(',', '');
 
-                            //
                             if (productProvider.showImage == null &&
                                 widget.productImage == '0') {
                               productProvider.updateProductImageById(
@@ -261,8 +344,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 helperVar.id,
                                 productProvider.showImage!.path,
                               );
-                              print('object');
-                              print(productProvider.showImage!.path);
                               item.productImage = productProvider.showImage!.path;
                             }
 

@@ -11,12 +11,22 @@ class ProductModel {
   String productName;
   String productPrice;
   String productImage;
+  String category;
+  String code;
+  String description;
+  String packagesize;
+  String mrp;
 
   ProductModel({
     required this.id,
     required this.productName,
     required this.productPrice,
     required this.productImage,
+    required this.category,
+    required this.code,
+    required this.description,
+    required this.packagesize,
+    required this.mrp,
   });
 }
 
@@ -49,10 +59,6 @@ class ProductProvider extends ChangeNotifier {
     final mb = kb / 1024;
     fileSize = mb.toString().substring(0, 4);
     fileType = image!.name.toString().split('.').last;
-    print('image!.path=${image!.path}');
-    print('fileName=$fileType');
-    print('image!.mb=$mb');
-    print('image!.kb=$kb');
     notifyListeners();
   }
 
@@ -67,12 +73,22 @@ class ProductProvider extends ChangeNotifier {
       String productName,
       String productPrice,
       String productImage,
+      String code,
+      String category,
+      String mrp,
+      String description,
+      String packagesize
       ) async {
     final newProduct = ProductModel(
       id: const Uuid().v1(),
       productName: productName,
       productPrice: productPrice,
       productImage: productImage,
+      code: code,
+      category: category,
+      mrp: mrp,
+      description: description,
+      packagesize: packagesize,
     );
     _item.add(newProduct);
 
@@ -81,6 +97,11 @@ class ProductProvider extends ChangeNotifier {
       'productName': newProduct.productName,
       'productPrice': newProduct.productPrice,
       'productImage': newProduct.productImage,
+      'code': newProduct.code,
+      'description':newProduct.description,
+      'category':newProduct.category,
+      'size':newProduct.packagesize,
+      'MRP':newProduct.mrp
     });
 
     deleteImage();
@@ -96,6 +117,11 @@ class ProductProvider extends ChangeNotifier {
       productName: item['productName'],
       productPrice: item['productPrice'],
       productImage: item['productImage'],
+      code: item['code'],
+      description: item['description'],
+      category: item['category'],
+      packagesize: item['size'],
+      mrp: item['MRP']
     ))
         .toList();
     notifyListeners();
@@ -103,13 +129,11 @@ class ProductProvider extends ChangeNotifier {
 
   Future<void> deleteProductById(pickId) async {
     await DBHelper.deleteById(DBHelper.product, 'id', pickId);
-    print('delete_product');
-    notifyListeners();
+       notifyListeners();
   }
 
   Future deleteTable() async {
     await DBHelper.deleteTable(DBHelper.product);
-    print('table delete');
     notifyListeners();
   }
 

@@ -10,10 +10,10 @@ class SqliteDatabaseHelper {
       join(await getDatabasesPath(), "usersDatabase.db"),
       onCreate: (db, version) async {
         await db.execute(
-          "CREATE TABLE $_tableName (id TEXT PRIMARY KEY, name TEXT, tradeName TEXT, mobileNo Text, whatsAppNo Text, address Text, gstNumber Text, location Text)",
+          "CREATE TABLE $_tableName (id TEXT PRIMARY KEY, name TEXT, tradeName TEXT, mobileNo Text, whatsAppNo Text, address Text, gstNumber Text)",
         );
       },
-      version: 3,
+      version: 4,
     );
   }
 
@@ -37,8 +37,7 @@ class SqliteDatabaseHelper {
           mobileNo: usersMaps[index]["mobileNo"],
           whatsAppNo: usersMaps[index]["whatsAppNo"],
           address: usersMaps[index]["address"],
-          gstNumber: usersMaps[index]["gstNumber"],
-          location: usersMaps[index]["location"]);
+          gstNumber: usersMaps[index]["gstNumber"]);
     });
   }
 
@@ -54,8 +53,7 @@ class SqliteDatabaseHelper {
           mobileNo: user[0]["mobileNo"],
           whatsAppNo: user[0]["whatsAppNo"],
           address: user[0]["address"],
-          gstNumber: user[0]["gstNumber"],
-          location: user[0]["location"]);
+          gstNumber: user[0]["gstNumber"]);
     } else {
       return const User();
     }

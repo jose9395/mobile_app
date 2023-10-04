@@ -62,7 +62,7 @@ class ProductsList extends StatelessWidget {
                             if (direction == DismissDirection.startToEnd) {
                               //delete
                               return showModalBottomSheet(
-                                shape:  RoundedRectangleBorder(
+                                shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(width * 0.02),
                                     topRight: Radius.circular(width * 0.02),
@@ -79,13 +79,21 @@ class ProductsList extends StatelessWidget {
                               //edit product
                               var helperVar = productProvider.item[index];
                               Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) =>     EditProductScreen(
+                                MaterialPageRoute(
+                                  builder: (context) => EditProductScreen(
                                     id: helperVar.id,
                                     productName: helperVar.productName,
                                     productPrice: helperVar.productPrice,
                                     productImage: helperVar.productImage,
                                     index: index,
-                                  ),),);
+                                    code: helperVar.code,
+                                    category: helperVar.category,
+                                    description: helperVar.description,
+                                    size: helperVar.packagesize,
+                                    mrp: helperVar.mrp,
+                                  ),
+                                ),
+                              );
                             }
                           },
                           child: MainBody(
@@ -209,7 +217,6 @@ class MainBody extends StatelessWidget {
                   ),
                   SizedBox(height: height * 0.02),
                   RichText(
-                    // maxLines: 2,
                     text: TextSpan(
                       children: [
                         TextSpan(
@@ -217,12 +224,72 @@ class MainBody extends StatelessWidget {
                           style: AppTextStyle.content,
                         ),
                         TextSpan(
-                          text:helper.productPrice,
+                          text: helper.productPrice,
                           style: AppTextStyle.content,
                         ),
                       ],
                     ),
-                  )
+                  ),
+                  SizedBox(height: height * 0.02),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Product Code",
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text: helper.code,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Product Size",
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text: helper.packagesize,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Product Category",
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text: helper.category,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: height * 0.02),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: "Description",
+                          style: AppTextStyle.content,
+                        ),
+                        TextSpan(
+                          text: helper.description,
+                          style: AppTextStyle.content,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -231,20 +298,24 @@ class MainBody extends StatelessWidget {
               children: [
                 helper.productImage.toString() != '0'
                     ? ClipRRect(
-                        borderRadius:  BorderRadius.circular(width * 0.03),
+                        borderRadius: BorderRadius.circular(width * 0.03),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) =>  ImageScreen(
-                                image: File(helper.productImage),
-                                heroTag: 'flutterLogo$index',
-                              ),),
+                              MaterialPageRoute(
+                                builder: (context) => ImageScreen(
+                                  image: File(helper.productImage),
+                                  heroTag: 'flutterLogo$index',
+                                ),
+                              ),
                             );
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => ImageScreen(
-                                image: File(helper.productImage),
-                                heroTag: 'flutterLogo$index',
-                              ),),
+                              MaterialPageRoute(
+                                builder: (context) => ImageScreen(
+                                  image: File(helper.productImage),
+                                  heroTag: 'flutterLogo$index',
+                                ),
+                              ),
                             );
                           },
                           child: Hero(

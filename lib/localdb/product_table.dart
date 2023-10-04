@@ -12,9 +12,14 @@ class DBHelper {
         db.execute('CREATE TABLE IF NOT EXISTS $product(id TEXT PRIMARY KEY ,'
             ' productName TEXT,'
             ' productPrice TEXT,'
-            ' productImage TEXT)');
+            ' productImage TEXT,'
+            ' code TEXT,'
+            ' description TEXT,'
+            ' category TEXT,'
+            ' size TEXT,'
+            ' MRP TEXT)');
       },
-      version: 1,
+      version: 2,
     );
   }
 
@@ -26,9 +31,9 @@ class DBHelper {
 
   //show all items
   static Future<List<Map<String, dynamic>>> selectAll(
-      String table,
-      order,
-      ) async {
+    String table,
+    order,
+  ) async {
     final db = await DBHelper.database();
     return db.query(
       table,
@@ -38,10 +43,10 @@ class DBHelper {
 
   //delete value by id
   static Future<void> deleteById(
-      String table,
-      String columnId,
-      String id,
-      ) async {
+    String table,
+    String columnId,
+    String id,
+  ) async {
     final db = await DBHelper.database();
     await db.delete(
       table,

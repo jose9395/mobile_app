@@ -3,7 +3,7 @@ import 'package:stock_check/localdb/user_table.dart';
 import 'package:stock_check/model/user_model.dart';
 
 class UserProvider extends ChangeNotifier {
-  final _db =  SqliteDatabaseHelper().getAllUsers();
+
   List<User>  _user = [];
   List<User> get allUsers => _user;
 
@@ -11,6 +11,7 @@ class UserProvider extends ChangeNotifier {
   Future<void> getAllUser() async {
     try {
       await Future.delayed(const Duration(seconds: 2));
+      final _db =  SqliteDatabaseHelper().getAllUsers();
       final response = await _db;
       _user = response;
       notifyListeners();
