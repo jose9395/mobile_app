@@ -124,7 +124,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       widget: widget.productImage == '0' &&
                           productP.image == null
                           ? FadeInImage(
-                        placeholder: const AssetImage('loading.gif'),
+                        placeholder: const AssetImage('assets/images/loading.gif'),
                         image: const AssetImage('no_image.png'),
                         height: width * 0.27,
                         width: width * 0.25,
@@ -139,7 +139,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         children: [
                           FadeInImage(
                             placeholder:
-                            const AssetImage('loading.gif'),
+                            const AssetImage('assets/images/loading.gif'),
                             image: FileImage(productP.showImage!),
                             width: width,
                             height: height,
@@ -161,7 +161,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           : productP.image == null
                           ? FadeInImage(
                         placeholder:
-                        const AssetImage('loading.gif'),
+                        const AssetImage('assets/images/loading.gif'),
                         image: FileImage(File(widget.productImage)),
                         height: width,
                         width: width,
@@ -173,7 +173,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         children: [
                           FadeInImage(
                             placeholder:
-                            const AssetImage('loading.gif'),
+                            const AssetImage('assets/images/loading.gif'),
                             image: FileImage(productP.showImage!),
                             width: width,
                             height: height,

@@ -27,7 +27,7 @@ class ImageScreen extends StatelessWidget {
                   tag: heroTag,
                   child: FadeInImage(
                     placeholder: const AssetImage(
-                      'loading.gif',
+                      'assets/images/loading.gif',
                     ),
                     image: FileImage(image),
                     width: width,
