@@ -160,7 +160,7 @@ class _AddProductState extends State<AddProduct> {
                     label: "Product price",
                     isrequired: true,
                     hint: "Enter Product Price",
-                    length: 4,
+                    length: 7,
                     validation: (value) =>
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: _priceController,
