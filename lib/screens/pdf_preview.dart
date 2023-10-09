@@ -7,13 +7,15 @@ import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/provider/product_provider.dart';
+import 'package:pdf/pdf.dart';
 
 class CustomPDFViewScreen extends StatefulWidget {
-
   final List<ProductModel> item;
 
-  const CustomPDFViewScreen({super.key,required this.item});
+  const CustomPDFViewScreen({super.key, required this.item});
+
   @override
   _CustomPDFViewScreenState createState() => _CustomPDFViewScreenState();
 }
@@ -28,9 +30,6 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
     generateCustomPDF().then((path) {
       setState(() {
         pdfPath = path;
-      /*  Provider.of<ProductProvider>(context, listen: false);
-        _item = ProductProvider().item;*/
-     //   debugPrint(ProductProvider().item.first.productName);
       });
     });
   }
@@ -64,12 +63,14 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
 
     final headers = ["Product name", "price"];
 
+    final data = widget.item
+        .map((prod) => [prod.productName, prod.productPrice])
+        .toList();
 
-    final data = widget.item.map((prod) => [prod.productName, prod.productPrice]).toList();
- /*  List<List<dynamic>> data1 = [widget.prod_name,widget.prod_price];*/
+
 
     // Add a page to the PDF
-    pdf.addPage(
+    /*  pdf.addPage(
       pw.Page(
         build: (context) {
           return pw.Center(
@@ -78,6 +79,75 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                 headers: headers,
                 data: data)
           ]));
+        },
+      ),
+    );*/
+
+    pdf.addPage(
+      pw.Page(
+        build: (context) {
+          return pw.Center(
+              child: pw.ListView.builder(
+                  itemCount: widget.item.length,
+                  itemBuilder: (context, index) {
+                    return pw.ClipRRect(
+                        verticalRadius: 5.0,
+                        horizontalRadius: 5.0,
+                    child:  pw.Container(
+                        margin:  pw.EdgeInsets.only(bottom: 6.0),
+                        decoration: pw.BoxDecoration(
+                          borderRadius: pw.BorderRadius.circular(5.0),
+                          color: PdfColors.grey100,
+                          boxShadow: [
+                            pw.BoxShadow(
+                              color: PdfColors.grey, //(x,y)
+                              blurRadius: 12.0,
+                            ),
+                          ],
+                        ),
+                        height: 120,
+                        child: pw.Row(
+                            mainAxisAlignment: pw.MainAxisAlignment.start,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Expanded(
+                                flex: 1,
+                                child: pw.Image(
+                                    pw.MemoryImage(
+                                      File(widget.item[index].productImage)
+                                          .readAsBytesSync(),
+                                    ),
+                                    fit: pw.BoxFit.fitWidth),
+                              ),
+                              pw.Expanded(
+                                flex: 3,
+                                child:pw.Padding(
+                                  padding: pw.EdgeInsets.only(left: 20),
+                                  child:  pw.Column(
+                                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                      mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                                      children: [
+                                        pw.Text(
+                                            "Name : " +
+                                                widget.item[index].productName,
+                                            style: pw.TextStyle(fontSize: 18)),
+                                        pw.Text(
+                                            "Category : " +
+                                                widget.item[index].category,
+                                            style: pw.TextStyle(fontSize: 18)),
+                                        pw.Text(
+                                            "Price : " +
+                                                widget.item[index].productPrice,
+                                            style: pw.TextStyle(fontSize: 18)),
+                                        pw.Text(
+                                            "Description : " +
+                                                widget.item[index].description,
+                                            style: pw.TextStyle(fontSize: 18)),
+                                      ]),
+                                )
+                              ),
+                            ])));
+                  }));
         },
       ),
     );
@@ -116,7 +186,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
           ? PDFView(
               filePath: pdfPath,
             )
-          : Center(
+          : const Center(
               child: CircularProgressIndicator(),
             ),
     );
