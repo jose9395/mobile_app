@@ -6,8 +6,12 @@ import 'package:stock_check/provider/product_provider.dart';
 import 'package:stock_check/provider/user_provider.dart';
 import 'package:stock_check/routes/routes.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider<UserProvider>(
       create: (context) => UserProvider(),

@@ -112,7 +112,7 @@ class _AddProductState extends State<AddProduct> {
                               borderRadius: BorderRadius.circular(width * 0.03),
                               child: FadeInImage(
                                 placeholder:
-                                const AssetImage('loading.gif'),
+                                const AssetImage('assets/images/loading.gif'),
                                 image: FileImage(value.showImage!),
                                 width: width,
                                 height: height,

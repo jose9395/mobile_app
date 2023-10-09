@@ -7,6 +7,7 @@ import 'package:stock_check/const/route_name.dart';
 import 'package:provider/provider.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:stock_check/screens/edit_product_screen.dart';
+import 'package:stock_check/screens/pdf_preview.dart';
 import 'package:stock_check/widget/delete_dismiss.dart';
 import 'package:stock_check/widget/edit_dismiss.dart';
 import 'package:stock_check/widget/image_screen.dart';
@@ -16,22 +17,46 @@ import 'package:stock_check/widget/snack_bar.dart';
 class ProductsList extends StatelessWidget {
   const ProductsList({super.key});
 
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+    List<ProductModel> item = [];
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        backgroundColor: green33,
-        onPressed: () {
-          Navigator.of(context).pushNamed(RouteName.addproduct);
-        },
-        child: Icon(
-          Icons.add,
-          color: white,
-          size: 30 * SizeConfig.widthMultiplier!,
-        ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "pdf",
+            elevation: 0,
+            backgroundColor: green33,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>  CustomPDFViewScreen(item:item)));
+            },
+            child: Icon(
+              Icons.picture_as_pdf,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+          SizedBox(width: width * 0.02,),
+          FloatingActionButton(
+            heroTag: "add",
+            elevation: 0,
+            backgroundColor: green33,
+            onPressed: () {
+              Navigator.of(context).pushNamed(RouteName.addproduct);
+            },
+            child: Icon(
+              Icons.add,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: Provider.of<ProductProvider>(context, listen: false)
@@ -53,54 +78,59 @@ class ProductsList extends StatelessWidget {
                     : ListView.builder(
                         scrollDirection: Axis.vertical,
                         itemCount: productProvider.item.length,
-                        itemBuilder: (context, index) => Dismissible(
-                          key: ValueKey(productProvider.item[index].id),
-                          background: const DeleteDismiss(verticalMargin: 0.03),
-                          secondaryBackground:
-                              const EditDismiss(verticalMargin: 0.03),
-                          confirmDismiss: (direction) async {
-                            if (direction == DismissDirection.startToEnd) {
-                              //delete
-                              return showModalBottomSheet(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(width * 0.02),
-                                    topRight: Radius.circular(width * 0.02),
+                        itemBuilder: (context, index) {
+                          item = productProvider.item;
+                         return Dismissible(
+                            key: ValueKey(productProvider.item[index].id),
+                            background: const DeleteDismiss(
+                                verticalMargin: 0.03),
+                            secondaryBackground: const EditDismiss(
+                                verticalMargin: 0.03),
+                            confirmDismiss: (direction) async {
+                              if (direction == DismissDirection.startToEnd) {
+                                return showModalBottomSheet(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(width * 0.02),
+                                      topRight: Radius.circular(width * 0.02),
+                                    ),
                                   ),
-                                ),
-                                backgroundColor: green5e,
-                                context: context,
-                                builder: (context) => DeleteProductBottomSheet(
-                                  index: index,
-                                  productProvider: productProvider,
-                                ),
-                              );
-                            } else {
-                              //edit product
-                              var helperVar = productProvider.item[index];
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => EditProductScreen(
-                                    id: helperVar.id,
-                                    productName: helperVar.productName,
-                                    productPrice: helperVar.productPrice,
-                                    productImage: helperVar.productImage,
-                                    index: index,
-                                    code: helperVar.code,
-                                    category: helperVar.category,
-                                    description: helperVar.description,
-                                    size: helperVar.packagesize,
-                                    mrp: helperVar.mrp,
+                                  backgroundColor: green5e,
+                                  context: context,
+                                  builder: (context) =>
+                                      DeleteProductBottomSheet(
+                                        index: index,
+                                        productProvider: productProvider,
+                                      ),
+                                );
+                              } else {
+                                //edit product
+                                var helperVar = productProvider.item[index];
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        EditProductScreen(
+                                          id: helperVar.id,
+                                          productName: helperVar.productName,
+                                          productPrice: helperVar.productPrice,
+                                          productImage: helperVar.productImage,
+                                          index: index,
+                                          code: helperVar.code,
+                                          category: helperVar.category,
+                                          description: helperVar.description,
+                                          size: helperVar.packagesize,
+                                          mrp: helperVar.mrp,
+                                        ),
                                   ),
-                                ),
-                              );
-                            }
-                          },
-                          child: MainBody(
-                            productProvider: productProvider,
-                            index: index,
-                          ),
-                        ),
+                                );
+                              }
+                            },
+                            child: MainBody(
+                              productProvider: productProvider,
+                              index: index,
+                            ),
+                          );
+                        }
                       ),
               ),
       ),
@@ -321,7 +351,7 @@ class MainBody extends StatelessWidget {
                           child: Hero(
                             tag: 'flutterLogo$index',
                             child: FadeInImage(
-                              placeholder: const AssetImage('loading.gif'),
+                              placeholder: const AssetImage('assets/images/loading.gif'),
                               image: FileImage(File(helper.productImage)),
                               width: width * 0.25,
                               height: height * 0.17,
