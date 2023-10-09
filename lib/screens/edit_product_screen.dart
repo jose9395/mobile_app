@@ -265,7 +265,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     textEditingController: _sizeController,
                     isObsecure: false,
                     length: 8,
-                    textInputType: TextInputType.number,
+                    textInputType: TextInputType.text,
                     onChanged: (value) {}),
                 SizedBox(
                   height: 10 * SizeConfig.heightMultiplier!,

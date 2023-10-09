@@ -13,6 +13,8 @@ import 'package:stock_check/provider/product_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:document_file_save_plus/document_file_save_plus.dart';
 
+import '../widget/snack_bar.dart';
+
 class CustomPDFViewScreen extends StatefulWidget {
   final List<ProductModel> item;
 
@@ -63,33 +65,89 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
   Future<String> generateCustomPDF() async {
     final pdf = pw.Document();
 
-    final headers = ["Product name", "price"];
-
-    final data = widget.item
-        .map((prod) => [prod.productName, prod.productPrice])
-        .toList();
-
-
-
-    // Add a page to the PDF
-    /*  pdf.addPage(
-      pw.Page(
-        build: (context) {
-          return pw.Center(
-              child: pw.Column(children: [
-            pw.TableHelper.fromTextArray(
-                headers: headers,
-                data: data)
-          ]));
-        },
-      ),
-    );*/
-
     pdf.addPage(
+      pw.MultiPage(
+        build: (context) => [
+          pw.Center(
+              child:pw.ListView.builder(
+                  itemCount: widget.item.length,
+                  itemBuilder: (context, index) {
+                    return pw.ClipRRect(
+                        verticalRadius: 5.0,
+                        horizontalRadius: 5.0,
+                        child:  pw.Container(
+                            margin:  pw.EdgeInsets.only(bottom: 6.0),
+                            decoration: pw.BoxDecoration(
+                              borderRadius: pw.BorderRadius.circular(5.0),
+                              color: PdfColors.grey100,
+                              boxShadow: [
+                                pw.BoxShadow(
+                                  color: PdfColors.grey, //(x,y)
+                                  blurRadius: 12.0,
+                                ),
+                              ],
+                            ),
+                            height: 120,
+                            child: pw.Row(
+                                mainAxisAlignment: pw.MainAxisAlignment.start,
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  pw.Expanded(
+                                    flex: 1,
+                                    child: pw.Image(
+                                        pw.MemoryImage(
+                                          File(widget.item[index].productImage)
+                                              .readAsBytesSync(),
+                                        ),
+                                        fit: pw.BoxFit.fitWidth),
+                                  ),
+                                  pw.Expanded(
+                                      flex: 3,
+                                      child:pw.Padding(
+                                        padding: pw.EdgeInsets.only(left: 20),
+                                        child:  pw.Column(
+                                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                                            children: [
+                                              pw.Text(
+                                                  "Name : " +
+                                                      widget.item[index].productName,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                              pw.Text(
+                                                  "Category : " +
+                                                      widget.item[index].category,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                              pw.Text(
+                                                  "Price : " +
+                                                      widget.item[index].productPrice,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                              pw.Text(
+                                                  "Description : " +
+                                                      widget.item[index].description,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                              pw.Text(
+                                                  "Code : " +
+                                                      widget.item[index].code,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                              pw.Text(
+                                                  "Size : " +
+                                                      widget.item[index].packagesize,
+                                                  style: pw.TextStyle(fontSize: 18)),
+                                            ]),
+                                      )
+                                  ),
+                                ])));
+                  }))
+        ],
+      ),
+    );
+
+
+   /* pdf.addPage(
       pw.Page(
         build: (context) {
           return pw.Center(
-              child: pw.ListView.builder(
+              child:pw.ListView.builder(
                   itemCount: widget.item.length,
                   itemBuilder: (context, index) {
                     return pw.ClipRRect(
@@ -145,6 +203,14 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                                             "Description : " +
                                                 widget.item[index].description,
                                             style: pw.TextStyle(fontSize: 18)),
+                                        pw.Text(
+                                            "Code : " +
+                                                widget.item[index].code,
+                                            style: pw.TextStyle(fontSize: 18)),
+                                        pw.Text(
+                                            "Size : " +
+                                                widget.item[index].packagesize,
+                                            style: pw.TextStyle(fontSize: 18)),
                                       ]),
                                 )
                               ),
@@ -152,7 +218,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                   }));
         },
       ),
-    );
+    );*/
 
     // Save the PDF to a file
     final output = await getTemporaryDirectory();
@@ -178,7 +244,8 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
         onPressed: ()async {
           try{
             Uint8List data = await File(pdfPath.toString()).readAsBytesSync();
-            DocumentFileSavePlus().saveFile(data, "My_Products.pdf", "appliation/pdf");
+            DocumentFileSavePlus().saveFile(data, "My_Products${widget.item.length.toString()}.pdf", "appliation/pdf");
+            snackBarErrorWidget(context,"PDF Downloaded");
           }catch (e){
            debugPrint("File save exception is : +${e.toString()}");
           }
