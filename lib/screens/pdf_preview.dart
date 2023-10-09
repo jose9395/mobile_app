@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
@@ -10,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:pdf/pdf.dart';
+import 'package:document_file_save_plus/document_file_save_plus.dart';
 
 class CustomPDFViewScreen extends StatefulWidget {
   final List<ProductModel> item;
@@ -173,8 +175,13 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
         heroTag: "download",
         elevation: 0,
         backgroundColor: green33,
-        onPressed: () {
-          requestPermission();
+        onPressed: ()async {
+          try{
+            Uint8List data = await File(pdfPath.toString()).readAsBytesSync();
+            DocumentFileSavePlus().saveFile(data, "My_Products.pdf", "appliation/pdf");
+          }catch (e){
+           debugPrint("File save exception is : +${e.toString()}");
+          }
         },
         child: Icon(
           Icons.download_outlined,
