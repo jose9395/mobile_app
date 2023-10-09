@@ -64,6 +64,7 @@ dev_dependencies:
   flutter_downloader: ^1.11.3
   permission_handler: ^11.0.1
   file_saver: ^0.2.8
+  document_file_save_plus: ^2.0.0
 
 
 # For information on the generic Dart part of this file, see the

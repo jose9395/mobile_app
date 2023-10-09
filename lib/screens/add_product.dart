@@ -220,7 +220,7 @@ class _AddProductState extends State<AddProduct> {
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: _sizeController,
                     isObsecure: false,
-                    textInputType: TextInputType.number,
+                    textInputType: TextInputType.text,
                     onChanged: (value) {}),
                 SizedBox(
                   height: 10 * SizeConfig.heightMultiplier!,
