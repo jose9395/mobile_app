@@ -85,8 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomButton(
                   text: "Login",
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, RouteName.dashboard, (Route<dynamic> route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context,
+                        RouteName.dashboard, (Route<dynamic> route) => false);
                   },
                 )
               ],

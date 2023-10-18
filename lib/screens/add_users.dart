@@ -48,6 +48,7 @@ class _AddUsersState extends State<AddUsers> {
               children: [
                 CustomTextField(
                     label: "Trade name",
+                    length: 25,
                     isrequired: true,
                     hint: "Enter Trade name",
                     validation: (value) =>
@@ -61,6 +62,7 @@ class _AddUsersState extends State<AddUsers> {
                 ),
                 CustomTextField(
                     label: "Name",
+                    length: 25,
                     isrequired: true,
                     hint: "Enter Name",
                     validation: (value) =>
@@ -80,26 +82,40 @@ class _AddUsersState extends State<AddUsers> {
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: mobileNoController,
                     isObsecure: false,
+                    length: 10,
                     textInputType: TextInputType.number,
-                    onChanged: (value) {}),
+                    onChanged: (value) { final numericValue = value.replaceAll(RegExp(r'[^0-9]'), ''); // Remove non-numeric characters
+                    mobileNoController.value = mobileNoController.value.copyWith(
+                      text: numericValue,
+                      selection: TextSelection.collapsed(offset: numericValue.length),
+                    );},
+                    ),
                 SizedBox(
                   height: 20 * SizeConfig.heightMultiplier!,
                 ),
                 CustomTextField(
                     label: "Whats App No",
                     isrequired: true,
+                    length: 10,
                     hint: "Enter Whats App No",
                     validation: (value) =>
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: whatsappNoController,
                     isObsecure: false,
                     textInputType: TextInputType.number,
-                    onChanged: (value) {}),
+                    onChanged: (value) {final numericValue = value.replaceAll(RegExp(r'[^0-9]'), ''); // Remove non-numeric characters
+                    whatsappNoController.value = whatsappNoController.value.copyWith(
+                      text: numericValue,
+                      selection: TextSelection.collapsed(offset: numericValue.length),
+                    );
+
+                    }),
                 SizedBox(
                   height: 20 * SizeConfig.heightMultiplier!,
                 ),
                 CustomTextField(
                     label: "Address",
+                    length: 30,
                     isrequired: true,
                     hint: "Enter Address",
                     validation: (value) =>
@@ -113,6 +129,7 @@ class _AddUsersState extends State<AddUsers> {
                 ),
                 CustomTextField(
                     label: "GST No",
+                    length: 15,
                     isrequired: true,
                     hint: "Enter GST No",
                     validation: (value) =>
@@ -120,7 +137,12 @@ class _AddUsersState extends State<AddUsers> {
                     textEditingController: gstController,
                     isObsecure: false,
                     textInputType: TextInputType.name,
-                    onChanged: (value) {}),
+                    onChanged: (value) {  final uppercaseValue = value.toUpperCase(); // Convert to uppercase
+                    final alphanumericValue = uppercaseValue.replaceAll(RegExp(r'[^A-Z0-9]'), ''); // Remove non-alphanumeric characters
+                    gstController.value = gstController.value.copyWith(
+                      text: alphanumericValue,
+                      selection: TextSelection.collapsed(offset: alphanumericValue.length),
+                    );}),
                 SizedBox(
                   height: 30 * SizeConfig.heightMultiplier!,
                 ),

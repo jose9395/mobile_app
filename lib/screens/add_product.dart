@@ -144,10 +144,19 @@ class _AddProductState extends State<AddProduct> {
                 //product name
                 CustomTextField(
                     label: "Product Name",
+                    length: 30,
                     isrequired: true,
                     hint: "Enter Product Name",
-                    validation: (value) =>
-                    value!.isEmpty ? "This field is required" : null,
+                    validation: (value) {
+                      if( value!.isEmpty) {
+                        return "This field is required";
+                      } else if(value.length > 10 ){
+
+                      }else{
+                        return null;
+                      }
+
+                    },
                     textEditingController: _nameController,
                     isObsecure: false,
                     textInputType: TextInputType.name,
@@ -174,7 +183,7 @@ class _AddProductState extends State<AddProduct> {
                     label: "Product Code",
                     isrequired: true,
                     hint: "Enter Product Code",
-                    length: 8,
+                    length: 12,
                     validation: (value) =>
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: _codeController,
@@ -186,6 +195,7 @@ class _AddProductState extends State<AddProduct> {
                 ),
                 CustomTextField(
                     label: "Product Category",
+                    length: 35,
                     isrequired: true,
                     hint: "Enter Product Category",
                     validation: (value) =>
@@ -201,7 +211,7 @@ class _AddProductState extends State<AddProduct> {
                     label: "Product MRP",
                     isrequired: true,
                     hint: "Enter Product MRP",
-                    length: 5,
+                    length: 7,
                     validation: (value) =>
                     value!.isEmpty ? "This field is required" : null,
                     textEditingController: _mrpController,

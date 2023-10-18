@@ -363,7 +363,7 @@ class MainBody extends StatelessWidget {
                         ),
                       )
                     : Image.asset(
-                        'no_image.png',
+                        'assets/images/no_image.png',
                         height: width * 0.27,
                         width: width * 0.2,
                       ),

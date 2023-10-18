@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
+import 'package:pdf/widgets.dart' as pw;
+
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
@@ -14,6 +16,9 @@ import 'package:pdf/pdf.dart';
 import 'package:document_file_save_plus/document_file_save_plus.dart';
 
 import '../widget/snack_bar.dart';
+import 'package:share_plus/share_plus.dart';
+
+var filePath = "";
 
 class CustomPDFViewScreen extends StatefulWidget {
   final List<ProductModel> item;
@@ -34,6 +39,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
     generateCustomPDF().then((path) {
       setState(() {
         pdfPath = path;
+        filePath = pdfPath!;
       });
     });
   }
@@ -69,14 +75,14 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
       pw.MultiPage(
         build: (context) => [
           pw.Center(
-              child:pw.ListView.builder(
+              child: pw.ListView.builder(
                   itemCount: widget.item.length,
                   itemBuilder: (context, index) {
                     return pw.ClipRRect(
                         verticalRadius: 5.0,
                         horizontalRadius: 5.0,
-                        child:  pw.Container(
-                            margin:  pw.EdgeInsets.only(bottom: 6.0),
+                        child: pw.Container(
+                            margin: pw.EdgeInsets.only(bottom: 6.0),
                             decoration: pw.BoxDecoration(
                               borderRadius: pw.BorderRadius.circular(5.0),
                               color: PdfColors.grey100,
@@ -87,63 +93,88 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                                 ),
                               ],
                             ),
-                            height: 120,
+                            height: 140,
                             child: pw.Row(
                                 mainAxisAlignment: pw.MainAxisAlignment.start,
                                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                                 children: [
                                   pw.Expanded(
                                     flex: 1,
-                                    child: pw.Image(
+                                    child: widget.item[index].productImage !=
+                                            "0"
+                                        ? pw.Image(
+                                            pw.MemoryImage(
+                                              File(widget
+                                                      .item[index].productImage)
+                                                  .readAsBytesSync(),
+                                            ),
+                                            fit: pw.BoxFit.fitWidth)
+                                        : pw.Stack(children: [
+                                      pw.Text("Image not added",
+                                          style: pw.TextStyle(
+                                              fontSize:
+                                              18))
+                                    ]), /*pw.Image(
                                         pw.MemoryImage(
-                                          File(widget.item[index].productImage)
-                                              .readAsBytesSync(),
+                                           File("assets/images/no_image.png")
+                                                .readAsBytesSync(),
                                         ),
-                                        fit: pw.BoxFit.fitWidth),
+                                        fit: pw.BoxFit.fitWidth)*/
                                   ),
                                   pw.Expanded(
                                       flex: 3,
-                                      child:pw.Padding(
+                                      child: pw.Padding(
                                         padding: pw.EdgeInsets.only(left: 20),
-                                        child:  pw.Column(
-                                            crossAxisAlignment: pw.CrossAxisAlignment.start,
-                                            mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                                        child: pw.Column(
+                                            crossAxisAlignment:
+                                                pw.CrossAxisAlignment.start,
+                                            mainAxisAlignment: pw
+                                                .MainAxisAlignment.spaceAround,
                                             children: [
                                               pw.Text(
                                                   "Name : " +
-                                                      widget.item[index].productName,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                      widget.item[index]
+                                                          .productName,
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                               pw.Text(
                                                   "Category : " +
-                                                      widget.item[index].category,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                      widget
+                                                          .item[index].category,
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                               pw.Text(
                                                   "Price : " +
-                                                      widget.item[index].productPrice,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                      widget.item[index]
+                                                          .productPrice,
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                               pw.Text(
                                                   "Description : " +
-                                                      widget.item[index].description,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                      widget.item[index]
+                                                          .description,
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                               pw.Text(
                                                   "Code : " +
                                                       widget.item[index].code,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                               pw.Text(
                                                   "Size : " +
-                                                      widget.item[index].packagesize,
-                                                  style: pw.TextStyle(fontSize: 18)),
+                                                      widget.item[index]
+                                                          .packagesize,
+                                                  style: pw.TextStyle(
+                                                      fontSize: 18)),
                                             ]),
-                                      )
-                                  ),
+                                      )),
                                 ])));
                   }))
         ],
       ),
     );
 
-
-   /* pdf.addPage(
+    /* pdf.addPage(
       pw.Page(
         build: (context) {
           return pw.Center(
@@ -222,7 +253,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
 
     // Save the PDF to a file
     final output = await getTemporaryDirectory();
-    final filePath = '${output.path}/custom_pdf_example.pdf';
+    final filePath = '${output.path}/Products.pdf';
     final file = File(filePath);
     await file.writeAsBytes(await pdf.save());
 
@@ -237,24 +268,46 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
         backgroundColor: green33,
         title: const Text('Products PDF'),
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "download",
-        elevation: 0,
-        backgroundColor: green33,
-        onPressed: ()async {
-          try{
-            Uint8List data = await File(pdfPath.toString()).readAsBytesSync();
-            DocumentFileSavePlus().saveFile(data, "My_Products${widget.item.length.toString()}.pdf", "appliation/pdf");
-            snackBarErrorWidget(context,"PDF Downloaded");
-          }catch (e){
-           debugPrint("File save exception is : +${e.toString()}");
-          }
-        },
-        child: Icon(
-          Icons.download_outlined,
-          color: white,
-          size: 30 * SizeConfig.widthMultiplier!,
-        ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            heroTag: "share",
+            backgroundColor: green33,
+            onPressed: () {
+              sharePdfOnWhatsApp();
+            },
+            child: Icon(
+              Icons.share_outlined,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+          SizedBox(width: 10),
+          FloatingActionButton(
+            heroTag: "download",
+            elevation: 0,
+            backgroundColor: green33,
+            onPressed: () async {
+              try {
+                Uint8List data =
+                    await File(pdfPath.toString()).readAsBytesSync();
+                DocumentFileSavePlus().saveFile(
+                    data,
+                    "My_Products${DateTime.now().toString()}.pdf",
+                    "appliation/pdf");
+                snackBarErrorWidget(context, "PDF Downloaded");
+              } catch (e) {
+                debugPrint("File save exception is : +${e.toString()}");
+              }
+            },
+            child: Icon(
+              Icons.download_outlined,
+              color: white,
+              size: 30 * SizeConfig.widthMultiplier!,
+            ),
+          ),
+        ],
       ),
       body: pdfPath != null
           ? PDFView(
@@ -265,4 +318,12 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
             ),
     );
   }
+}
+
+void sharePdfOnWhatsApp() async {
+  // Define the message you want to send (optional).
+  String message = "Check out this PDF!";
+
+  // Share the PDF file using WhatsApp.
+  await Share.shareFiles([filePath], text: message);
 }

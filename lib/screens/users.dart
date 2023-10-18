@@ -21,7 +21,7 @@ class UserList extends StatelessWidget {
                 : Consumer<UserProvider>(
                     child: Center(
                       child: Text(
-                        'No products added',
+                        'No users added',
                         textAlign: TextAlign.center,
                         style: AppTextStyle.content,
                       ),

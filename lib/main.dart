@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       return OrientationBuilder(builder: (context, orientation) {
         SizeConfig().init(constraints, orientation);
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'TradePro',
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: green33),

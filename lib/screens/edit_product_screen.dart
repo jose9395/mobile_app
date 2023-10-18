@@ -125,7 +125,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           productP.image == null
                           ? FadeInImage(
                         placeholder: const AssetImage('assets/images/loading.gif'),
-                        image: const AssetImage('no_image.png'),
+                        image: const AssetImage('assets/images/no_image.png'),
                         height: width * 0.27,
                         width: width * 0.25,
                         fit: BoxFit.contain,
