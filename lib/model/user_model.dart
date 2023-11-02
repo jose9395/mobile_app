@@ -23,7 +23,7 @@ class User {
       mobileNo: json["mobileNo"],
       whatsAppNo: json["whatsAppNo"],
       address: json["address"],
-      gstNumber: json["gstNumber"]);
+      gstNumber: json["gstNumber"]);  // object
 
   Map<String, dynamic> toMap() {
     return {
@@ -34,7 +34,7 @@ class User {
       'whatsAppNo': whatsAppNo,
       'address': address,
       'gstNumber': gstNumber
-    };
+    };  //  json
   }
 
 }

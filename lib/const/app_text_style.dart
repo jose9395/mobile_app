@@ -3,7 +3,7 @@ import 'package:stock_check/config/size_config.dart';
 import 'package:stock_check/const/app_color.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AppTextStyle {
+class   AppTextStyle {
 
   static final title = TextStyle(
       fontSize: 22 * SizeConfig.textMultiplier!,

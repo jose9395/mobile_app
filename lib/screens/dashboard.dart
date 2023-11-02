@@ -29,9 +29,11 @@ class _DashboardState extends State<Dashboard> {
             bottom: const TabBar(
               tabs: [
                 Tab(icon: Icon(Icons.supervised_user_circle), text: "Customers"),
-                Tab(icon: Icon(Icons.shopping_cart_outlined), text: "Products")
+                Tab(icon: Icon(Icons.shopping_cart_outlined), text: "Products"),
               ],
             ),
+
+
           ),
           body:const TabBarView(
             children: [

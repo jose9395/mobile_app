@@ -14,9 +14,10 @@ import 'package:stock_check/const/app_text_style.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:document_file_save_plus/document_file_save_plus.dart';
-
 import '../widget/snack_bar.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 
 var filePath = "";
 
@@ -275,7 +276,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
             heroTag: "share",
             backgroundColor: green33,
             onPressed: () {
-              sharePdfOnWhatsApp();
+              sharePdfOnWhatsApp(["9961073453"]);  // "+919886626229"
             },
             child: Icon(
               Icons.share_outlined,
@@ -320,10 +321,68 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
   }
 }
 
-void sharePdfOnWhatsApp() async {
-  // Define the message you want to send (optional).
-  String message = "Check out this PDF!";
+// void sharePdfOnWhatsApp() async {
+//   // Define the message you want to send (optional).
+//   String message = "Check out this PDF!";
+//
+//   // Share the PDF file using WhatsApp.
+//   await Share.shareFiles([filePath], text: message);
+// }
+//
+void sharePdfOnWhatsApp(List<String> phoneNumbers) async {
+  String message = "Check out this PDF! "; // Optional message
 
-  // Share the PDF file using WhatsApp.
-  await Share.shareFiles([filePath], text: message);
+  // Join the phone numbers with commas to create a comma-separated list
+  String numbers = phoneNumbers.join(",");
+
+  // Create the WhatsApp URL with multiple recipients
+  String url = "whatsapp://send?text=$message&phone=$numbers";
+
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    // Handle error
+    print("Could not launch WhatsApp.");
+  }
 }
+
+
+// Future<void> sharePdfOnWhatsApp(List<String> phoneNumbers) async {
+//   String message = "Check out this PDF!"; // Optional message
+//
+//   final navigatorKey = GlobalKey<NavigatorState>();
+//
+//   for (final phoneNumber in phoneNumbers) {
+//     String url = "https://wa.me/$phoneNumber/?text=${Uri.parse(message)}";
+//
+//     if (await canLaunch(url)) {
+//       await launch(url);
+//       await Future.delayed(Duration(seconds: 5)); // Wait for 5 seconds.
+//       navigatorKey.currentState?.pop(); // Navigate back to the previous screen.
+//     } else {
+//       print("Could not launch WhatsApp for $phoneNumber.");
+//     }
+//   }
+// }
+
+// Future<void> sharePdfOnWhatsApp(List<String> phoneNumbers) async {
+//   String message = "Check out this PDF!"; // Optional message
+//
+//   // Create a list of file paths to share (in this case, just one)
+//   List<String> filesToShare = [filePath];
+//
+//   try {
+//     // Share the PDF file using WhatsApp
+//     await Share.shareFiles(
+//       filesToShare,
+//       text: message,
+//       subject: 'Product PDF', // You can set a subject for the shared file
+//     );
+//   } catch (e) {
+//     // Handle any errors that occur during sharing
+//     print("Error sharing PDF: $e");
+//   }
+// }
+
+
+

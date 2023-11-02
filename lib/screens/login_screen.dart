@@ -69,7 +69,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     isObsecure: obSecurePassword,
                     hint: "Enter your password",
                     onSuffixTap: () {
-                      obSecurePassword = !obSecurePassword;
+                      setState(() {
+                        obSecurePassword = !obSecurePassword;
+                      });
                     },
                     suffixWidget: Icon(
                       obSecurePassword
@@ -83,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20 * SizeConfig.heightMultiplier!,
                 ),
                 CustomButton(
-                  text: "Login",
+                  text: "login",
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(context,
                         RouteName.dashboard, (Route<dynamic> route) => false);

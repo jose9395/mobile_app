@@ -9,7 +9,7 @@ class CustomButton extends StatelessWidget {
         this.buttonColor = green33,
         this.borderRadius = 4,
         this.width,
-        this.splashColor = green32,
+        this.splashColor = red32,
         required this.text,
         this.onPressed,
         this.textStyle})
@@ -32,8 +32,8 @@ class CustomButton extends StatelessWidget {
           child: TextButton(
             onPressed: onPressed,
             style: TextButton.styleFrom(
-                animationDuration: const Duration(milliseconds: 300),
-                primary: splashColor,
+                 animationDuration: const Duration(milliseconds: 300),
+                 primary: splashColor,
                 textStyle: textStyle ??
                     AppTextStyle.content.copyWith(
                       fontSize: 12 * SizeConfig.textMultiplier!,

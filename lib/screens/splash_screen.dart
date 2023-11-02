@@ -14,13 +14,13 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback  ((_) {
       Future.delayed(const Duration(milliseconds: 400), () {
         Navigator.pushNamedAndRemoveUntil(
             context, RouteName.login_route, (Route<dynamic> route) => false);
       });
     });
-    super.initState();
+     super.initState();
   }
 
   @override
