@@ -11,9 +11,14 @@ import 'package:stock_check/const/app_color.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stock_check/const/app_text_style.dart';
+import 'package:stock_check/model/user_model.dart';
 import 'package:stock_check/provider/product_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:document_file_save_plus/document_file_save_plus.dart';
+import 'package:stock_check/provider/user_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+
 import '../widget/snack_bar.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +37,7 @@ class CustomPDFViewScreen extends StatefulWidget {
 
 class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
   String? pdfPath;
+  List<User> selectedNumbers = [];
 
   @override
   void initState() {
@@ -83,11 +89,11 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                         verticalRadius: 5.0,
                         horizontalRadius: 5.0,
                         child: pw.Container(
-                            margin: pw.EdgeInsets.only(bottom: 6.0),
+                            margin: const pw.EdgeInsets.only(bottom: 6.0),
                             decoration: pw.BoxDecoration(
                               borderRadius: pw.BorderRadius.circular(5.0),
                               color: PdfColors.grey100,
-                              boxShadow: [
+                              boxShadow: const [
                                 pw.BoxShadow(
                                   color: PdfColors.grey, //(x,y)
                                   blurRadius: 12.0,
@@ -111,11 +117,10 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
                                             ),
                                             fit: pw.BoxFit.fitWidth)
                                         : pw.Stack(children: [
-                                      pw.Text("Image not added",
-                                          style: pw.TextStyle(
-                                              fontSize:
-                                              18))
-                                    ]), /*pw.Image(
+                                            pw.Text("Image not added",
+                                                style: const pw.TextStyle(
+                                                    fontSize: 18))
+                                          ]), /*pw.Image(
                                         pw.MemoryImage(
                                            File("assets/images/no_image.png")
                                                 .readAsBytesSync(),
@@ -276,7 +281,7 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
             heroTag: "share",
             backgroundColor: green33,
             onPressed: () {
-              sharePdfOnWhatsApp(["9961073453"]);  // "+919886626229"
+              sharePdfOnWhatsApp();
             },
             child: Icon(
               Icons.share_outlined,
@@ -319,8 +324,75 @@ class _CustomPDFViewScreenState extends State<CustomPDFViewScreen> {
             ),
     );
   }
+
+  void showList() async{
+    await showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) => Dialog(
+          insetPadding: EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+          backgroundColor: Colors.transparent,
+          child:FutureBuilder(
+                future: Provider.of<UserProvider>(context, listen: false).getAllUser(),
+                  builder: (context, snapshot) =>
+                  snapshot.connectionState == ConnectionState.waiting
+                      ? const Center(child: CircularProgressIndicator())
+                      : Consumer<UserProvider>(
+                    child: Center(
+                      child: Text(
+                        'No users added',
+                        textAlign: TextAlign.center,
+                        style: AppTextStyle.content,
+                      ),
+                    ),
+                      builder: (context, userProvider, child) =>
+                      userProvider.allUsers.isEmpty
+                          ? child!
+                          :MultiSelectDialog(
+                        width: 125 * SizeConfig.widthMultiplier!,
+                        height: 340 * SizeConfig.heightMultiplier!,
+                        listType: MultiSelectListType.LIST,
+                        initialValue: selectedNumbers,
+                        separateSelectedItems: false,
+                        backgroundColor: Colors.white,
+                        items: userProvider.allUsers
+                            .map((element) =>
+                            MultiSelectItem<User>(
+                                element,
+                                element.name! +
+                                    "\n" +
+                                    element.whatsAppNo!))
+                            .toList(),
+                        itemsTextStyle: AppTextStyle.content.copyWith(
+                          fontSize: 14 * SizeConfig.textMultiplier!,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'TT Commons',
+                        ),
+                        selectedItemsTextStyle:
+                        AppTextStyle.content.copyWith(
+                          fontSize: 14 * SizeConfig.textMultiplier!,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'TT Commons',
+                        ),
+                        confirmText: const Text("Share"),
+                        cancelText:const Text("Cancel"),
+                        title: const Text("Select Users"),
+                        selectedColor: Colors.black,
+                        searchable: false,
+                        onConfirm: (results) {
+                          selectedNumbers = results;
+                        },
+                      )
+                  )
+              )
+        ));
+  }
+
 }
 
+void sharePdfOnWhatsApp(String path) async {
+  // Define the message you want to send (optional).
+  String message = "Check out this PDF!";
 // void sharePdfOnWhatsApp() async {
 //   // Define the message you want to send (optional).
 //   String message = "Check out this PDF!";
@@ -335,6 +407,8 @@ void sharePdfOnWhatsApp(List<String> phoneNumbers) async {
   // Join the phone numbers with commas to create a comma-separated list
   String numbers = phoneNumbers.join(",");
 
+  // Share the PDF file using WhatsApp.
+  await Share.shareFiles([path], text: message);
   // Create the WhatsApp URL with multiple recipients
   String url = "whatsapp://send?text=$message&phone=$numbers";
 
